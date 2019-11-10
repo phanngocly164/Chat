@@ -17,7 +17,7 @@ import {
 } from 'apollo-server-core'
 import * as uuid from 'uuid'
 
-import { User } from '@models'
+import { User, File } from '@models'
 import { comparePassword, hashPassword } from '@utils'
 import { EmailResolver } from './email.resolver'
 import { FileResolver } from './file.resolver'
@@ -41,7 +41,7 @@ import {
 	verifyRefreshToken,
 	verifyEmailToken
 } from '@auth'
-import { sendMail, stripe } from '@shared'
+import { sendMail, stripe, uploadFile } from '@shared'
 
 import { USER_SUBSCRIPTION, STRIPE_PLAN } from '@environments'
 
@@ -273,7 +273,12 @@ export class UserResolver {
 				throw new ForbiddenError('User not found.')
 			}
 
-			const newFile = await this.fileResolver.uploadFile(file)
+			const { filename, createReadStream, mimetype } = file
+			const path = await uploadFile(createReadStream)
+
+			const newFile = await getMongoRepository(File).save(
+				new File({ filename, path, createdBy: _id })
+			)
 
 			const updateUser = await getMongoRepository(User).save(
 				new User({

@@ -166,6 +166,7 @@ export class GraphqlService implements GqlOptionsFactory {
 				}
 
 				let currentUser
+				console.log(req.headers)
 
 				// console.log(ACCESS_TOKEN, req.headers)
 

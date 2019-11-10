@@ -27,9 +27,9 @@ export const uploadFile = async (createReadStream: any): Promise<string> => {
 			.pipe(
 				cloudinary.v2.uploader.upload_stream(
 					{
-						folder: 'chnirt',
+						folder: 'kaonashi',
 						public_id: uniqueFilename,
-						tags: `chnirt`
+						tags: `kaonashi`
 					}, // directory and tags are optional
 					(err, image) => {
 						if (err) {

@@ -3,7 +3,7 @@ import { getMongoRepository } from 'typeorm'
 import { createWriteStream } from 'fs'
 import * as uuid from 'uuid'
 
-import { File } from '@models'
+import { File, User } from '@models'
 import { uploadFile } from '@shared'
 import { ApolloError } from 'apollo-server-core'
 
@@ -16,14 +16,27 @@ export class FileResolver {
 		})
 	}
 
-	@Mutation()
-	async uploadFile(@Args('file') file: any): Promise<File> {
-		const { filename, createReadStream, mimetype } = file
+	@Query()
+	async file(@Context('currentUser') currentUser: User) {
+		const { _id } = currentUser
+		if (_id) {
+			return getMongoRepository(File).find({
+				createdBy: _id
+			})
+		}
+	}
 
+	@Mutation()
+	async uploadFile(
+		@Args('file') file: any,
+		@Context('currentUser') currentUser: User
+	): Promise<File> {
+		const { filename, createReadStream, mimetype } = file
+		const { _id } = currentUser
 		const path = await uploadFile(createReadStream)
 
 		const newFile = await getMongoRepository(File).save(
-			new File({ filename, path })
+			new File({ filename, path, createdBy: _id })
 		)
 
 		return newFile

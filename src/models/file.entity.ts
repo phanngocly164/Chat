@@ -23,6 +23,10 @@ export class File {
 
 	@Expose()
 	@Column()
+	createdBy: string
+
+	@Expose()
+	@Column()
 	createdAt: number
 	@Expose()
 	@Column()

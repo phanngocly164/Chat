@@ -6,10 +6,12 @@ type File {
 	path: String!
 	createdAt: Float!
 	updatedAt: Float!
+	createdBy: String!
 }
 
 type Query {
 	files: [File] @isAuthenticated
+	file: [File] @isAuthenticated
 }
 
 type Mutation {
