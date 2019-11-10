@@ -33,7 +33,7 @@
 		"db:seed": "ts-node src/dbseed.ts",
 		"doc": "npx compodoc --port 11045 -p tsconfig.json -s",
 		"doc:serve": "yarn doc && npx compodoc -s",
-		"heroku-postbuild": "npm i --only=dev --no-shrinkwrap && npm run build",
+		"heroku-postbuild": "npm i --only=dev --no-shrinkwrap && npm run gen && npm run build",
 		"dump": "ts-node src/dump",
 		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
 	},
